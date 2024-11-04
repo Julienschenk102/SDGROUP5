@@ -11,6 +11,7 @@ def terminate():
     pygame.quit()
     sys.exit()
 
+
 #Attend que le joueur appuie sur une touche pour continuer. Si le joueur appuie sur ESC, le programme se termine.
 def waitForPlayerToPressKey():
     while True:
@@ -126,6 +127,7 @@ while True:
                 # If the mouse moves, move the player where to the cursor.
                 playerRect.centerx = event.pos[0]
                 playerRect.centery = event.pos[1]
+
         # Add new baddies at the top of the screen, if needed.
         if not reverseCheat and not slowCheat:
             baddieAddCounter += 1
@@ -217,7 +219,6 @@ while True:
         # Draw each good.
         for g in good:
             windowSurface.blit(g['surface'], g['rect'])
-            
             # Draw each baddie.
         for b in baddies:
             windowSurface.blit(b['surface'], b['rect'])
