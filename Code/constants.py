@@ -19,14 +19,22 @@ TEXTCOLOR = (0, 0, 0)
 BACKGROUNDCOLOR = (77, 77, 77)
 FPS = 60
 
-BADDIEMINSPEED = 3
-BADDIEMAXSPEED = 5
-ADDNEWBADDIERATE = 40
+
 PLAYERMOVERATE = 5
+
+#baddie
+BADDIEMINSPEED = 3
+BADDIEMAXSPEED = 8
+ADDNEWBADDIERATE = 40
 baddieHeight = 0.15 * WINDOWHEIGHT
 baddieWidth = int(baddieHeight * 3 / 4)
-crowdHeight = baddieHeight
-crowdWidth = baddieWidth
+
+#good
+GOODMINSPEED = 3
+GOODMAXSPEED = 8
+ADDNEWGOODRATE = 2
+goodHeight = baddieHeight
+goodWidth = baddieWidth
 
 # Images.
 playerImage = pygame.image.load('player.png')
@@ -34,3 +42,8 @@ playerRect = playerImage.get_rect()
 baddieImage = pygame.image.load('baddie1.png')
 goodImage1 = pygame.image.load('good1.png')
 goodImage2 = pygame.image.load('good2.png')
+
+good_image_paths = [
+    'good1.png',
+    'good2.png',
+]

@@ -2,6 +2,10 @@ import pygame, random, sys
 from pygame.locals import *
 import constants as cs
 
+#photos aléatoires
+goodImages = [pygame.image.load(path) for path in cs.good_image_paths]
+goodImage = random.choice(goodImages)
+
 #Termine proprement le jeu en fermant Pygame et en quittant le programme
 def terminate():
     pygame.quit()
@@ -54,6 +58,7 @@ playerRect = playerImage.get_rect()
 windowSurface.fill(cs.BACKGROUNDCOLOR)
 drawText('Dodger', font, windowSurface, (cs.WINDOWWIDTH / 3), (cs.WINDOWHEIGHT / 3))
 drawText('Press a key to start.', font, windowSurface, (cs.WINDOWWIDTH / 3) - 30, (cs.WINDOWHEIGHT / 3) + 50)
+
 pygame.display.update()
 waitForPlayerToPressKey()
 
@@ -70,6 +75,7 @@ while True:
     moveLeft = moveRight = moveUp = moveDown = False
     reverseCheat = slowCheat = False
     baddieAddCounter = 0
+    goodAddCounter = 0
     pygame.mixer.music.play(-1, 0.0)
 
     while True: # The game loop runs while the game part is playing.
@@ -140,6 +146,30 @@ while True:
 }
 
             baddies.append(newBaddie)
+        
+        
+        # Add new good at the top of the screen, if needed.
+        if not reverseCheat and not slowCheat:
+            goodAddCounter += 1
+        if goodAddCounter == cs.ADDNEWGOODRATE:
+            goodAddCounter = 0
+            newGood = {
+
+        
+    'rect': pygame.Rect(
+        random.randint(
+            int(cs.BORDER), 
+            int(cs.WINDOWWIDTH - cs.goodWidth - cs.BORDER)
+        ), 
+        -cs.goodHeight,  # Commencer au-dessus de l'écran
+        cs.goodWidth, 
+        cs.goodHeight
+    ),
+    'speed': random.randint(cs.GOODMINSPEED, cs.GOODMAXSPEED),
+    'surface': pygame.transform.scale(random.choice(goodImages), (cs.goodWidth, cs.goodHeight)),
+}
+
+            good.append(newGood)
 
         # Move the player around.
         if moveLeft and playerRect.left > 0:
@@ -159,11 +189,20 @@ while True:
                 b['rect'].move_ip(0, -5)
             elif slowCheat:
                 b['rect'].move_ip(0, 1)
+        
+        # Move the good down.
+        for g in good:
+            if not reverseCheat and not slowCheat:
+                g['rect'].move_ip(0, g['speed'])
+            elif reverseCheat:
+                g['rect'].move_ip(0, -5)
+            elif slowCheat:
+                g['rect'].move_ip(0, 1)
 
-        # Delete baddies that have fallen past the bottom.
-        for b in baddies[:]:
-            if b['rect'].top > cs.WINDOWHEIGHT:
-                baddies.remove(b)
+        # Delete good that have fallen past the bottom.
+        for g in good[:]:
+            if g['rect'].top > cs.WINDOWHEIGHT:
+                good.remove(g)
 
         # Draw the game world on the window.
         windowSurface.fill(cs.BACKGROUNDCOLOR)
@@ -175,7 +214,11 @@ while True:
         # Draw the player's rectangle.
         windowSurface.blit(playerImage, playerRect)
 
-        # Draw each baddie.
+        # Draw each good.
+        for g in good:
+            windowSurface.blit(g['surface'], g['rect'])
+            
+            # Draw each baddie.
         for b in baddies:
             windowSurface.blit(b['surface'], b['rect'])
 
@@ -186,6 +229,7 @@ while True:
             if score > topScore:
                 topScore = score # set new top score
             break
+
 
         mainClock.tick(cs.FPS)
 
